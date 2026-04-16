@@ -1,1103 +1,450 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VOLXERA — Industrial Design & 3D Manufacturing</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<title>N11 Soru-Cevap Paneli</title>
 <style>
-  :root {
-    --obsidian: #0a0a0a;
-    --obsidian-2: #111111;
-    --obsidian-3: #1a1a1a;
-    --gold: #c8a96e;
-    --gold-light: #e2c99a;
-    --gold-dark: #9a7a48;
-    --ivory: #f5f3ef;
-    --ivory-2: #e8e4dc;
-    --steel: #3a3a3a;
-    --muted: #666;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #222; font-size: 15px; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+  header img { width: 32px; }
+  header h1 { font-size: 18px; font-weight: 600; color: #d0021b; }
+  header span { font-size: 13px; color: #888; }
 
-  html { scroll-behavior: smooth; }
+  .container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
 
-  body {
-    background: var(--obsidian);
-    color: var(--ivory);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .card-title { font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
 
-  /* Custom cursor */
-  .cursor {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform .15s ease;
+  label { display: block; font-size: 13px; color: #555; margin-bottom: 4px; font-weight: 500; }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px;
+    font-size: 14px; font-family: inherit; background: #fafafa; color: #222;
+    transition: border-color 0.2s;
   }
-  .cursor-ring {
-    width: 32px; height: 32px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transition: top .08s ease, left .08s ease, transform .2s ease;
-    opacity: .6;
-  }
-  body:hover .cursor { transform: translate(-50%, -50%); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #d0021b; background: #fff; }
+  textarea { resize: vertical; min-height: 72px; }
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 28px 60px;
-    mix-blend-mode: normal;
-  }
-  nav::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(10,10,10,.95) 0%, transparent 100%);
-    pointer-events: none;
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    position: relative;
-    z-index: 1;
-  }
-  .nav-logo svg { width: 24px; height: 24px; }
-  .nav-wordmark {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 5px;
-    color: var(--ivory);
-  }
-  .nav-links {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-    position: relative;
-    z-index: 1;
-  }
-  .nav-links a {
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color .3s;
-  }
-  .nav-links a:hover { color: var(--gold); }
-  .nav-cta {
-    position: relative;
-    z-index: 1;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--obsidian);
-    background: var(--gold);
-    border: none;
-    padding: 10px 24px;
-    cursor: none;
-    transition: background .3s;
-  }
-  .nav-cta:hover { background: var(--gold-light); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+  .field-full { margin-bottom: 12px; }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 60px 80px;
-    position: relative;
-    z-index: 2;
-  }
-  .hero-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp .8s .3s forwards;
-  }
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(72px, 8vw, 120px);
-    line-height: .92;
-    letter-spacing: 2px;
-    color: var(--ivory);
-    opacity: 0;
-    animation: fadeUp .8s .5s forwards;
-  }
-  .hero-title em {
-    font-style: normal;
-    color: var(--gold);
-  }
-  .hero-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--muted);
-    margin-top: 28px;
-    max-width: 380px;
-    line-height: 1.6;
-    opacity: 0;
-    animation: fadeUp .8s .7s forwards;
-  }
-  .hero-actions {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-top: 48px;
-    opacity: 0;
-    animation: fadeUp .8s .9s forwards;
-  }
-  .btn-primary {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--obsidian);
-    background: var(--gold);
-    border: none;
-    padding: 16px 36px;
-    cursor: none;
-    text-decoration: none;
-    display: inline-block;
-    transition: background .3s;
-  }
-  .btn-primary:hover { background: var(--gold-light); }
-  .btn-ghost {
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: color .3s;
-  }
-  .btn-ghost:hover { color: var(--gold); }
-  .btn-ghost::after {
-    content: '→';
-    transition: transform .3s;
-  }
-  .btn-ghost:hover::after { transform: translateX(4px); }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 6px; border: 1px solid #ddd; background: #fff; color: #333; font-size: 14px; font-family: inherit; cursor: pointer; font-weight: 500; transition: all 0.15s; }
+  .btn:hover { background: #f5f5f5; }
+  .btn-red { background: #d0021b; border-color: #d0021b; color: #fff; }
+  .btn-red:hover { background: #b50217; }
+  .btn-green { background: #1a8a44; border-color: #1a8a44; color: #fff; font-size: 13px; padding: 7px 14px; }
+  .btn-green:hover { background: #146b35; }
+  .btn-sm { font-size: 12px; padding: 5px 10px; color: #888; }
 
-  .hero-right {
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-visual {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    animation: fadeIn 1.2s .4s forwards;
-  }
-  .hex-anim {
-    position: relative;
-    width: 340px;
-    height: 340px;
-  }
-  .hex-anim svg {
-    width: 100%;
-    height: 100%;
-  }
-  .hero-line {
-    position: absolute;
-    bottom: 80px;
-    left: 60px;
-    right: 0;
-    height: 1px;
-    background: var(--steel);
-    opacity: 0;
-    animation: expandLine 1s 1.1s forwards;
-  }
-  .hero-scroll {
-    position: absolute;
-    bottom: 52px;
-    right: 60px;
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0;
-    animation: fadeUp .6s 1.3s forwards;
-  }
-  .hero-scroll::before {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: var(--gold);
-  }
+  .spinner { display: none; width: 15px; height: 15px; border: 2px solid #ffffff55; border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* COUNTER */
-  .stats {
-    background: var(--obsidian-3);
-    border-top: 1px solid var(--steel);
-    border-bottom: 1px solid var(--steel);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .stat {
-    padding: 48px 60px;
-    border-right: 1px solid var(--steel);
-  }
-  .stat:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .stat-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+  .status-bar { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .msg { font-size: 13px; }
+  .ok { color: #1a8a44; }
+  .err { color: #c0392b; }
 
-  /* ABOUT */
-  .about {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 80vh;
-  }
-  .about-left {
-    background: var(--obsidian-2);
-    padding: 100px 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .section-tag {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .section-tag::before {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-  }
-  .about-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 4vw, 56px);
-    font-weight: 300;
-    line-height: 1.15;
-    color: var(--ivory);
-    margin-bottom: 32px;
-  }
-  .about-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-  .about-text {
-    font-size: 14px;
-    line-height: 1.9;
-    color: var(--muted);
-    max-width: 440px;
-    margin-bottom: 24px;
-  }
-  .about-right {
-    background: var(--obsidian-3);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    width: 100%;
-    height: 100%;
-  }
-  .about-cell {
-    background: var(--obsidian-2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    gap: 16px;
-    transition: background .3s;
-  }
-  .about-cell:hover { background: var(--obsidian-3); }
-  .about-cell svg { width: 36px; height: 36px; }
-  .about-cell-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    letter-spacing: 3px;
-    color: var(--ivory);
-  }
-  .about-cell-text {
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.7;
-  }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 16px; }
+  .filter-bar .f { display: flex; flex-direction: column; gap: 4px; }
+  .filter-bar input, .filter-bar select { min-width: 140px; }
 
-  /* SERVICES */
-  .services {
-    padding: 120px 60px;
-    background: var(--obsidian);
-  }
-  .services-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 80px;
-  }
-  .services-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 88px);
-    letter-spacing: 3px;
-    line-height: 1;
-    color: var(--ivory);
-  }
-  .services-title span { color: var(--gold); }
-  .services-desc {
-    max-width: 320px;
-    font-size: 13px;
-    line-height: 1.8;
-    color: var(--muted);
-    padding-bottom: 8px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .service-card {
-    background: var(--obsidian-2);
-    padding: 52px 44px;
-    position: relative;
-    overflow: hidden;
-    transition: background .4s;
-    cursor: none;
-  }
-  .service-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--gold);
-    transition: width .4s ease;
-  }
-  .service-card:hover { background: var(--obsidian-3); }
-  .service-card:hover::before { width: 100%; }
-  .service-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 64px;
-    color: var(--steel);
-    line-height: 1;
-    margin-bottom: 28px;
-    transition: color .4s;
-  }
-  .service-card:hover .service-num { color: var(--gold-dark); }
-  .service-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--ivory);
-    margin-bottom: 16px;
-    line-height: 1.2;
-  }
-  .service-text {
-    font-size: 13px;
-    line-height: 1.8;
-    color: var(--muted);
-  }
+  .question-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 10px; transition: border-color 0.2s; }
+  .question-card:hover { border-color: #bbb; }
 
-  /* WORK */
-  .work {
-    background: var(--obsidian-2);
-    padding: 120px 60px;
-  }
-  .work-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 60px;
-  }
-  .work-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 5vw, 72px);
-    letter-spacing: 3px;
-    color: var(--ivory);
-  }
-  .work-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: 320px 240px;
-    gap: 3px;
-  }
-  .work-item {
-    background: var(--obsidian-3);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    cursor: none;
-  }
-  .work-item:first-child { grid-row: 1 / 3; }
-  .work-item-bg {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: .12;
-    transition: opacity .4s, transform .6s;
-  }
-  .work-item:hover .work-item-bg { opacity: .22; transform: scale(1.05); }
-  .work-item-info {
-    position: relative;
-    z-index: 2;
-    padding: 28px 32px;
-    background: linear-gradient(to top, rgba(10,10,10,.95) 0%, transparent 100%);
-    width: 100%;
-    transform: translateY(8px);
-    transition: transform .3s;
-  }
-  .work-item:hover .work-item-info { transform: translateY(0); }
-  .work-item-cat {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 6px;
-  }
-  .work-item-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--ivory);
-  }
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .badge { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+  .badge-wait { background: #fff3cd; color: #856404; }
+  .badge-answered { background: #d4edda; color: #155724; }
+  .q-id { font-size: 12px; color: #aaa; }
+  .q-date { font-size: 12px; color: #aaa; }
 
-  /* PROCESS */
-  .process {
-    padding: 120px 60px;
-    background: var(--obsidian);
-  }
-  .process-inner {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .process-left { position: sticky; top: 120px; }
-  .process-steps { display: flex; flex-direction: column; gap: 2px; }
-  .step {
-    display: flex;
-    gap: 32px;
-    padding: 40px 44px;
-    background: var(--obsidian-2);
-    border-left: 2px solid transparent;
-    transition: border-color .3s, background .3s;
-  }
-  .step:hover { background: var(--obsidian-3); border-color: var(--gold); }
-  .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 44px;
-    color: var(--steel);
-    line-height: 1;
-    flex-shrink: 0;
-    transition: color .3s;
-  }
-  .step:hover .step-num { color: var(--gold); }
-  .step-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--ivory);
-    margin-bottom: 10px;
-  }
-  .step-text {
-    font-size: 13px;
-    line-height: 1.8;
-    color: var(--muted);
-  }
+  .q-product { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
+  .q-product a { color: #d0021b; text-decoration: none; }
+  .q-text { font-size: 15px; color: #222; margin-bottom: 10px; line-height: 1.5; }
+  .q-existing { font-size: 13px; background: #eafbea; border-left: 3px solid #1a8a44; padding: 8px 12px; border-radius: 0 6px 6px 0; color: #155724; margin-bottom: 10px; }
 
-  /* CONTACT */
-  .contact {
-    background: var(--obsidian-2);
-    padding: 120px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-  .contact-left {}
-  .contact-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(52px, 6vw, 88px);
-    letter-spacing: 3px;
-    line-height: .95;
-    color: var(--ivory);
-    margin-bottom: 32px;
-  }
-  .contact-title span { color: var(--gold); }
-  .contact-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 40px;
-  }
-  .contact-info { display: flex; flex-direction: column; gap: 16px; }
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .contact-item::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-  .contact-form { display: flex; flex-direction: column; gap: 2px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-  .form-field {
-    background: var(--obsidian-3);
-    border: none;
-    border-bottom: 1px solid var(--steel);
-    padding: 20px 24px;
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 13px;
-    color: var(--ivory);
-    outline: none;
-    transition: border-color .3s;
-    resize: none;
-  }
-  .form-field::placeholder { color: var(--steel); letter-spacing: 1px; }
-  .form-field:focus { border-color: var(--gold); background: var(--obsidian-2); }
-  .form-submit {
-    background: var(--gold);
-    border: none;
-    padding: 20px 40px;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--obsidian);
-    cursor: none;
-    transition: background .3s;
-    align-self: flex-start;
-    margin-top: 4px;
-  }
-  .form-submit:hover { background: var(--gold-light); }
+  .ans-row { display: flex; gap: 8px; align-items: flex-end; }
+  .ans-row textarea { flex: 1; }
+  .ans-controls { display: flex; flex-direction: column; gap: 6px; }
+  .ans-status { font-size: 12px; min-height: 16px; }
 
-  /* FOOTER */
-  footer {
-    background: var(--obsidian);
-    border-top: 1px solid var(--steel);
-    padding: 48px 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .footer-wordmark {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 4px;
-    color: var(--ivory);
-  }
-  .footer-copy {
-    font-size: 11px;
-    color: var(--steel);
-    letter-spacing: 1px;
-  }
-  .footer-links { display: flex; gap: 32px; }
-  .footer-links a {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--steel);
-    text-decoration: none;
-    transition: color .3s;
-  }
-  .footer-links a:hover { color: var(--gold); }
+  .empty { text-align: center; padding: 40px 20px; color: #aaa; font-size: 14px; }
+  .empty svg { display: block; margin: 0 auto 12px; opacity: 0.3; }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes expandLine {
-    from { transform: scaleX(0); transform-origin: left; }
-    to { transform: scaleX(1); transform-origin: left; }
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  @keyframes spinReverse {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: .4; }
-    50% { opacity: 1; }
-  }
+  .saved-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #1a8a44; background: #eafbea; padding: 5px 12px; border-radius: 20px; }
+  .dot { width: 7px; height: 7px; background: #1a8a44; border-radius: 50%; }
 
-  .spin { animation: spin 20s linear infinite; transform-origin: center; }
-  .spin-r { animation: spinReverse 14s linear infinite; transform-origin: center; }
-  .pulse { animation: pulse 3s ease-in-out infinite; }
+  .pagination { display: flex; align-items: center; gap: 10px; margin-top: 14px; justify-content: center; }
+  .pagination .btn { padding: 6px 14px; font-size: 13px; }
+  .page-info { font-size: 13px; color: #888; }
+
+  #questionsPanel { display: none; }
+
+  @media (max-width: 600px) {
+    .field-row, .field-row.triple { grid-template-columns: 1fr; }
+    .filter-bar { flex-direction: column; }
+    .filter-bar input, .filter-bar select { width: 100%; }
+    .ans-row { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<header>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#d0021b"/><text x="16" y="22" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">n11</text></svg>
+  <h1>N11</h1>
+  <span>Ürün Soru-Cevap Paneli</span>
+  <div style="margin-left:auto;" id="topBadge"></div>
+</header>
 
-<nav>
-  <a href="#" class="nav-logo">
-    <svg viewBox="0 0 28 28" fill="none">
-      <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#c8a96e" stroke-width="1.2"/>
-      <polygon points="14,7 21,11 21,17 14,21 7,17 7,11" fill="none" stroke="#c8a96e" stroke-width=".7" opacity=".5"/>
-    </svg>
-    <span class="nav-wordmark">VOLXERA</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#work">Work</a></li>
-    <li><a href="#process">Process</a></li>
-  </ul>
-  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get in Touch</button>
-</nav>
+<div class="container">
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <p class="hero-label">Industrial Design & 3D Manufacturing</p>
-    <h1 class="hero-title">
-      FORM<br>
-      MEETS<br>
-      <em>FORCE.</em>
-    </h1>
-    <p class="hero-sub">Where precision engineering meets uncompromising aesthetics. We design, prototype, and manufacture objects that endure.</p>
-    <div class="hero-actions">
-      <a href="#work" class="btn-primary">View Our Work</a>
-      <a href="#services" class="btn-ghost">Our Services</a>
+  <!-- Auth Kartı -->
+  <div class="card" id="authCard">
+    <div class="card-title">API Bağlantısı</div>
+    <div class="field-row">
+      <div>
+        <label for="apiKey">API Key (AppKey)</label>
+        <input type="text" id="apiKey" placeholder="API anahtarınızı girin" autocomplete="off" />
+      </div>
+      <div>
+        <label for="apiSecret">API Secret (AppSecret)</label>
+        <input type="password" id="apiSecret" placeholder="API şifrenizi girin" autocomplete="off" />
+      </div>
     </div>
+    <div class="status-bar">
+      <button class="btn btn-red" onclick="saveCredentials()">Bağlan ve Kaydet</button>
+      <span class="msg" id="credMsg"></span>
+    </div>
+    <p style="font-size:12px; color:#aaa; margin-top:10px;">Bilgileriniz yalnızca bu tarayıcıya kaydedilir (localStorage). Sunucuya gönderilmez.</p>
   </div>
-  <div class="hero-right">
-    <div class="hero-visual">
-      <div class="hex-anim">
-        <svg viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g class="spin">
-            <polygon points="170,20 310,95 310,245 170,320 30,245 30,95" fill="none" stroke="#c8a96e" stroke-width="1" opacity=".3"/>
-          </g>
-          <g class="spin-r">
-            <polygon points="170,50 286,113 286,227 170,290 54,227 54,113" fill="none" stroke="#c8a96e" stroke-width=".8" opacity=".2"/>
-          </g>
-          <polygon points="170,80 262,131 262,209 170,260 78,209 78,131" fill="none" stroke="#c8a96e" stroke-width="1.5" opacity=".6"/>
-          <polygon points="170,108 244,150 244,190 170,232 96,190 96,150" fill="none" stroke="#c8a96e" stroke-width=".8" opacity=".35"/>
-          <polygon points="170,130 226,162 226,178 170,210 114,178 114,162" fill="none" stroke="#c8a96e" stroke-width=".6" opacity=".25"/>
 
-          <line x1="170" y1="80" x2="170" y2="20" stroke="#c8a96e" stroke-width=".5" opacity=".2" class="spin"/>
-          <line x1="262" y1="131" x2="310" y2="95" stroke="#c8a96e" stroke-width=".5" opacity=".2"/>
-          <line x1="262" y1="209" x2="310" y2="245" stroke="#c8a96e" stroke-width=".5" opacity=".2"/>
-          <line x1="170" y1="260" x2="170" y2="320" stroke="#c8a96e" stroke-width=".5" opacity=".2"/>
-          <line x1="78" y1="209" x2="30" y2="245" stroke="#c8a96e" stroke-width=".5" opacity=".2"/>
-          <line x1="78" y1="131" x2="30" y2="95" stroke="#c8a96e" stroke-width=".5" opacity=".2"/>
+  <!-- Sorular Paneli -->
+  <div id="questionsPanel">
 
-          <circle cx="170" cy="170" r="4" fill="#c8a96e" class="pulse"/>
-          <circle cx="170" cy="170" r="18" fill="none" stroke="#c8a96e" stroke-width=".6" opacity=".3"/>
-          <circle cx="170" cy="170" r="34" fill="none" stroke="#c8a96e" stroke-width=".4" opacity=".15"/>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">Soruları Filtrele &amp; Çek</div>
+      <div class="filter-bar">
+        <div class="f">
+          <label>Ürün ID</label>
+          <input type="text" id="fProductId" placeholder="Opsiyonel" style="max-width:150px;" />
+        </div>
+        <div class="f">
+          <label>Tarih (gg/aa/yyyy)</label>
+          <input type="text" id="fDate" placeholder="ör: 01/01/2024" style="max-width:160px;" />
+        </div>
+        <div class="f">
+          <label>Durum</label>
+          <select id="fStatus" style="max-width:180px;">
+            <option value="">Tüm sorular</option>
+            <option value="WaitingForAnswer">Cevaplanmamış</option>
+            <option value="Answered">Cevaplanmış</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Sayfa boyutu</label>
+          <select id="fPageSize" style="max-width:100px;">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <button class="btn btn-red" id="loadBtn" onclick="loadQuestions(0)" style="align-self:flex-end;">
+          <span class="spinner" id="loadSpinner"></span>
+          Soruları Çek
+        </button>
+        <button class="btn btn-sm" onclick="clearCredentials()" style="align-self:flex-end;">Çıkış Yap</button>
+      </div>
+      <div id="fetchMsg" class="msg" style="font-size:13px;"></div>
+    </div>
 
-          <text x="170" y="175" font-family="'Bebas Neue', sans-serif" font-size="22" letter-spacing="5" fill="#c8a96e" text-anchor="middle" opacity=".9">VX</text>
-        </svg>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Sorular</div>
+        <span id="totalInfo" style="font-size:13px; color:#888;"></span>
       </div>
-    </div>
-  </div>
-  <div class="hero-line"></div>
-  <div class="hero-scroll">Scroll to explore</div>
-</section>
-
-<!-- STATS -->
-<section class="stats">
-  <div class="stat">
-    <div class="stat-num">340+</div>
-    <div class="stat-label">Projects Completed</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">12</div>
-    <div class="stat-label">Years of Precision</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">98%</div>
-    <div class="stat-label">Client Satisfaction</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">24</div>
-    <div class="stat-label">Industry Awards</div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="about-left">
-    <div class="section-tag">About Volxera</div>
-    <h2 class="about-title">Precision is not a feature.<br><em>It is our foundation.</em></h2>
-    <p class="about-text">VOLXERA was built on a single conviction: that industrial design and additive manufacturing should be held to the same standard as fine craftsmanship. Every line, every layer, every surface treated with deliberate intent.</p>
-    <p class="about-text">We combine advanced 3D printing technology with rigorous design thinking to deliver objects that are both technically flawless and visually compelling.</p>
-  </div>
-  <div class="about-right">
-    <div class="about-grid">
-      <div class="about-cell">
-        <svg viewBox="0 0 36 36" fill="none" stroke="#c8a96e" stroke-width="1">
-          <polygon points="18,3 33,10.5 33,25.5 18,33 3,25.5 3,10.5"/>
-          <circle cx="18" cy="18" r="5"/>
-        </svg>
-        <div class="about-cell-title">3D Manufacturing</div>
-        <div class="about-cell-text">FDM, SLA, SLS — every technology applied with surgical precision</div>
-      </div>
-      <div class="about-cell">
-        <svg viewBox="0 0 36 36" fill="none" stroke="#c8a96e" stroke-width="1">
-          <rect x="4" y="4" width="28" height="28" rx="1"/>
-          <line x1="4" y1="13" x2="32" y2="13"/>
-          <line x1="13" y1="4" x2="13" y2="32"/>
-        </svg>
-        <div class="about-cell-title">Industrial Design</div>
-        <div class="about-cell-text">Form and function united — from concept sketch to final product</div>
-      </div>
-      <div class="about-cell">
-        <svg viewBox="0 0 36 36" fill="none" stroke="#c8a96e" stroke-width="1">
-          <circle cx="18" cy="18" r="14"/>
-          <circle cx="18" cy="18" r="7"/>
-          <line x1="18" y1="4" x2="18" y2="11"/>
-          <line x1="18" y1="25" x2="18" y2="32"/>
-          <line x1="4" y1="18" x2="11" y2="18"/>
-          <line x1="25" y1="18" x2="32" y2="18"/>
-        </svg>
-        <div class="about-cell-title">Rapid Prototyping</div>
-        <div class="about-cell-text">Ideas made tangible within 24 hours — test, refine, perfect</div>
-      </div>
-      <div class="about-cell">
-        <svg viewBox="0 0 36 36" fill="none" stroke="#c8a96e" stroke-width="1">
-          <path d="M18 4 L30 10 L30 22 L18 32 L6 22 L6 10 Z"/>
-          <path d="M18 10 L26 14 L26 22 L18 26 L10 22 L10 14 Z"/>
-        </svg>
-        <div class="about-cell-title">Project Management</div>
-        <div class="about-cell-text">End-to-end delivery — from brief to final production</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section class="services" id="services">
-  <div class="services-header">
-    <h2 class="services-title">OUR<br><span>SERVICES</span></h2>
-    <p class="services-desc">Every project is an opportunity to redefine what is possible at the intersection of design and manufacturing.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-num">01</div>
-      <div class="service-name">Industrial Design & Engineering</div>
-      <div class="service-text">From napkin sketch to production-ready CAD. We design for manufacturability, ergonomics, and longevity — never sacrificing aesthetics for function.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">02</div>
-      <div class="service-name">3D Printing & Additive Manufacturing</div>
-      <div class="service-text">FDM, resin, SLS, and metal printing. Tolerances measured in microns. Materials selected for the exact demands of each application.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">03</div>
-      <div class="service-name">Rapid Prototyping & Iteration</div>
-      <div class="service-text">Turn concepts into physical reality within days. Iterative testing cycles that compress months of development into weeks.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">04</div>
-      <div class="service-name">Custom Product Development</div>
-      <div class="service-text">Bespoke objects designed and manufactured to specification. From architectural models to functional end-use parts — no brief is too complex.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">05</div>
-      <div class="service-name">Design Consultation</div>
-      <div class="service-text">Strategic design advisory for companies seeking to elevate their physical products. We bring fresh perspective grounded in production reality.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">06</div>
-      <div class="service-name">Small-Batch Production</div>
-      <div class="service-text">Bridge manufacturing for quantities too small for injection moulding, too large for one-off prototyping. Quality at every unit.</div>
-    </div>
-  </div>
-</section>
-
-<!-- WORK -->
-<section class="work" id="work">
-  <div class="work-header">
-    <h2 class="work-title">SELECTED WORK</h2>
-    <a href="#" class="btn-ghost" style="font-family:Jost;font-weight:200;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:8px">View All Projects</a>
-  </div>
-  <div class="work-grid">
-    <div class="work-item">
-      <div class="work-item-bg">
-        <svg width="280" height="280" viewBox="0 0 280 280" fill="none">
-          <polygon points="140,20 250,80 250,200 140,260 30,200 30,80" stroke="#c8a96e" stroke-width="2"/>
-          <polygon points="140,60 210,100 210,180 140,220 70,180 70,100" stroke="#c8a96e" stroke-width="1" opacity=".5"/>
-          <circle cx="140" cy="140" r="30" stroke="#c8a96e" stroke-width="1" opacity=".4"/>
-        </svg>
-      </div>
-      <div class="work-item-info">
-        <div class="work-item-cat">Architectural Model</div>
-        <div class="work-item-name">Tower Complex — Istanbul</div>
-      </div>
-    </div>
-    <div class="work-item">
-      <div class="work-item-bg">
-        <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
-          <rect x="20" y="20" width="120" height="120" stroke="#c8a96e" stroke-width="1.5"/>
-          <rect x="40" y="40" width="80" height="80" stroke="#c8a96e" stroke-width="1" opacity=".5"/>
-          <circle cx="80" cy="80" r="20" stroke="#c8a96e" stroke-width="1" opacity=".4"/>
-        </svg>
-      </div>
-      <div class="work-item-info">
-        <div class="work-item-cat">Product Design</div>
-        <div class="work-item-name">Precision Enclosure</div>
-      </div>
-    </div>
-    <div class="work-item">
-      <div class="work-item-bg">
-        <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
-          <circle cx="80" cy="80" r="60" stroke="#c8a96e" stroke-width="1.5"/>
-          <circle cx="80" cy="80" r="40" stroke="#c8a96e" stroke-width="1" opacity=".5"/>
-          <circle cx="80" cy="80" r="20" stroke="#c8a96e" stroke-width=".8" opacity=".3"/>
-          <line x1="80" y1="20" x2="80" y2="140" stroke="#c8a96e" stroke-width=".6" opacity=".3"/>
-          <line x1="20" y1="80" x2="140" y2="80" stroke="#c8a96e" stroke-width=".6" opacity=".3"/>
-        </svg>
-      </div>
-      <div class="work-item-info">
-        <div class="work-item-cat">Industrial Component</div>
-        <div class="work-item-name">Turbine Housing</div>
-      </div>
-    </div>
-    <div class="work-item">
-      <div class="work-item-bg">
-        <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
-          <polygon points="80,10 150,50 150,90 80,110 10,90 10,50" stroke="#c8a96e" stroke-width="1.5"/>
-          <polygon points="80,30 120,52 120,78 80,90 40,78 40,52" stroke="#c8a96e" stroke-width="1" opacity=".5"/>
-        </svg>
-      </div>
-      <div class="work-item-info">
-        <div class="work-item-cat">Concept Prototype</div>
-        <div class="work-item-name">Modular Assembly System</div>
-      </div>
-    </div>
-    <div class="work-item">
-      <div class="work-item-bg">
-        <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
-          <rect x="10" y="10" width="60" height="100" stroke="#c8a96e" stroke-width="1.5"/>
-          <rect x="90" y="10" width="60" height="60" stroke="#c8a96e" stroke-width="1" opacity=".5"/>
-          <rect x="90" y="80" width="60" height="30" stroke="#c8a96e" stroke-width="1" opacity=".3"/>
-        </svg>
-      </div>
-      <div class="work-item-info">
-        <div class="work-item-cat">Brand Objects</div>
-        <div class="work-item-name">Luxury Packaging System</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section class="process" id="process">
-  <div class="process-inner">
-    <div class="process-left">
-      <div class="section-tag">How We Work</div>
-      <h2 class="about-title" style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.5vw,48px);font-weight:300;line-height:1.2;color:var(--ivory)">From idea to object — a refined process.</h2>
-      <p class="about-text" style="margin-top:24px">Every project follows the same disciplined path. No shortcuts. No compromises.</p>
-    </div>
-    <div class="process-steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div>
-          <div class="step-title">Brief & Discovery</div>
-          <div class="step-text">We immerse ourselves in your project — its purpose, its audience, its constraints. Understanding before designing.</div>
+      <div id="questionsList">
+        <div class="empty">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+          Yukarıdan soruları çekin
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div>
-          <div class="step-title">Concept Development</div>
-          <div class="step-text">Multiple directions explored, refined, and pressure-tested against technical and aesthetic criteria.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div>
-          <div class="step-title">Engineering & CAD</div>
-          <div class="step-text">Precision modelling with manufacturing requirements integrated from the first line. Design for production, not just presentation.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div>
-          <div class="step-title">Prototyping & Testing</div>
-          <div class="step-text">Physical validation at every critical stage. We believe objects must be held, tested, and refined in the real world.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">05</div>
-        <div>
-          <div class="step-title">Production & Delivery</div>
-          <div class="step-text">Final manufacturing with uncompromising quality control. Every piece inspected before it leaves our studio.</div>
-        </div>
+      <div class="pagination" id="paginationBar" style="display:none;">
+        <button class="btn" id="prevBtn" onclick="changePage(-1)">← Önceki</button>
+        <span class="page-info" id="pageInfo"></span>
+        <button class="btn" id="nextBtn" onclick="changePage(1)">Sonraki →</button>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="contact-left">
-    <div class="section-tag">Start a Project</div>
-    <h2 class="contact-title">LET'S<br>BUILD<br><span>TOGETHER.</span></h2>
-    <p class="contact-text">Tell us about your project. We respond to every inquiry within 24 hours.</p>
-    <div class="contact-info">
-      <div class="contact-item">info@volxera.com</div>
-      <div class="contact-item">volxera.com</div>
-      <div class="contact-item">Istanbul, Turkey</div>
-    </div>
   </div>
-  <div class="contact-form">
-    <div class="form-row">
-      <input class="form-field" type="text" placeholder="Your Name">
-      <input class="form-field" type="email" placeholder="Email Address">
-    </div>
-    <input class="form-field" type="text" placeholder="Company / Project">
-    <select class="form-field" style="appearance:none;color:var(--steel)">
-      <option value="" disabled selected>Service Required</option>
-      <option>Industrial Design</option>
-      <option>3D Manufacturing</option>
-      <option>Rapid Prototyping</option>
-      <option>Custom Product Development</option>
-      <option>Consultation</option>
-    </select>
-    <textarea class="form-field" rows="5" placeholder="Tell us about your project"></textarea>
-    <button class="form-submit">Send Inquiry</button>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">
-    <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-      <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#c8a96e" stroke-width="1.2"/>
-      <polygon points="14,7 21,11 21,17 14,21 7,17 7,11" fill="none" stroke="#c8a96e" stroke-width=".7" opacity=".5"/>
-    </svg>
-    <span class="footer-wordmark">VOLXERA</span>
-  </div>
-  <div class="footer-copy">© 2026 Volxera. All rights reserved.</div>
-  <div class="footer-links">
-    <a href="#">Instagram</a>
-    <a href="#">LinkedIn</a>
-    <a href="#">Behance</a>
-  </div>
-</footer>
+</div>
 
 <script>
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
+var creds = { key: '', secret: '' };
+var questions = [];
+var currentPage = 0;
+var totalPages = 0;
+var totalCount = 0;
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top = my + 'px';
-});
+(function init() {
+  try {
+    var saved = localStorage.getItem('n11_creds');
+    if (saved) {
+      creds = JSON.parse(saved);
+      showPanel();
+    }
+  } catch(e) {}
+})();
 
-function animRing() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = (rx - 16) + 'px';
-  ring.style.top = (ry - 16) + 'px';
-  requestAnimationFrame(animRing);
+function saveCredentials() {
+  var key = document.getElementById('apiKey').value.trim();
+  var secret = document.getElementById('apiSecret').value.trim();
+  if (!key || !secret) {
+    setMsg('credMsg', 'API Key ve Secret zorunludur.', false);
+    return;
+  }
+  creds = { key: key, secret: secret };
+  try { localStorage.setItem('n11_creds', JSON.stringify(creds)); } catch(e) {}
+  showPanel();
+  loadQuestions(0);
 }
-animRing();
 
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
-    ring.style.transform = 'scale(1.4)';
-    ring.style.opacity = '.3';
+function clearCredentials() {
+  creds = { key: '', secret: '' };
+  try { localStorage.removeItem('n11_creds'); } catch(e) {}
+  document.getElementById('authCard').style.display = 'block';
+  document.getElementById('questionsPanel').style.display = 'none';
+  document.getElementById('topBadge').innerHTML = '';
+  document.getElementById('apiKey').value = '';
+  document.getElementById('apiSecret').value = '';
+}
+
+function showPanel() {
+  document.getElementById('authCard').style.display = 'none';
+  document.getElementById('questionsPanel').style.display = 'block';
+  document.getElementById('topBadge').innerHTML = '<div class="saved-indicator"><div class="dot"></div>Bağlı</div>';
+}
+
+function setMsg(id, text, ok) {
+  var el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'msg ' + (ok ? 'ok' : 'err');
+}
+
+function escapeXml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function buildListSoap(page) {
+  var productId = document.getElementById('fProductId').value.trim();
+  var date = document.getElementById('fDate').value.trim();
+  var status = document.getElementById('fStatus').value;
+  var pageSize = document.getElementById('fPageSize').value;
+  return '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://www.n11.com/ws/schemas">' +
+    '<soapenv:Header/><soapenv:Body>' +
+    '<sch:GetProductQuestionListRequest>' +
+    '<auth><appKey>' + escapeXml(creds.key) + '</appKey><appSecret>' + escapeXml(creds.secret) + '</appSecret></auth>' +
+    '<productQuestionSearch>' +
+    (productId ? '<productId>' + escapeXml(productId) + '</productId>' : '') +
+    (date ? '<questionDate>' + escapeXml(date) + '</questionDate>' : '') +
+    (status ? '<status>' + escapeXml(status) + '</status>' : '') +
+    '</productQuestionSearch>' +
+    '<pagingData><currentPage>' + page + '</currentPage><pageSize>' + pageSize + '</pageSize></pagingData>' +
+    '</sch:GetProductQuestionListRequest>' +
+    '</soapenv:Body></soapenv:Envelope>';
+}
+
+function buildAnswerSoap(questionId, answer) {
+  return '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://www.n11.com/ws/schemas">' +
+    '<soapenv:Header/><soapenv:Body>' +
+    '<sch:SaveProductAnswerRequest>' +
+    '<auth><appKey>' + escapeXml(creds.key) + '</appKey><appSecret>' + escapeXml(creds.secret) + '</appSecret></auth>' +
+    '<productQuestionId>' + escapeXml(questionId) + '</productQuestionId>' +
+    '<productAnswer>' + escapeXml(answer) + '</productAnswer>' +
+    '</sch:SaveProductAnswerRequest>' +
+    '</soapenv:Body></soapenv:Envelope>';
+}
+
+function getXmlText(doc, tag) {
+  var el = doc.querySelector(tag);
+  return el ? el.textContent : '';
+}
+
+async function loadQuestions(page) {
+  currentPage = page;
+  var spinner = document.getElementById('loadSpinner');
+  spinner.style.display = 'inline-block';
+  document.getElementById('loadBtn').disabled = true;
+  document.getElementById('fetchMsg').textContent = '';
+  document.getElementById('questionsList').innerHTML = '<div class="empty">Yükleniyor...</div>';
+  document.getElementById('paginationBar').style.display = 'none';
+
+  try {
+    var resp = await fetch('https://api.n11.com/ws/ProductService/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/xml;charset=UTF-8',
+        'SOAPAction': ''
+      },
+      body: buildListSoap(page)
+    });
+    var text = await resp.text();
+    parseQuestions(text);
+  } catch(e) {
+    document.getElementById('questionsList').innerHTML =
+      '<div class="empty err">Hata: ' + e.message + '</div>';
+    document.getElementById('fetchMsg').textContent = 'N11 API bağlantısı kurulamadı.';
+    document.getElementById('fetchMsg').className = 'msg err';
+  }
+  spinner.style.display = 'none';
+  document.getElementById('loadBtn').disabled = false;
+}
+
+function parseQuestions(xmlText) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(xmlText, 'text/xml');
+
+  var statusEl = doc.querySelector('r > status');
+  if (!statusEl || statusEl.textContent !== 'success') {
+    var errEl = doc.querySelector('errorMessage') || doc.querySelector('faultstring');
+    document.getElementById('questionsList').innerHTML =
+      '<div class="empty err">API Hatası: ' + (errEl ? errEl.textContent : 'Bilinmeyen hata') + '</div>';
+    return;
+  }
+
+  var items = doc.querySelectorAll('productQuestion');
+  totalCount = parseInt(getXmlText(doc, 'totalCount')) || 0;
+  totalPages = parseInt(getXmlText(doc, 'pageCount')) || 1;
+  var pageSize = parseInt(document.getElementById('fPageSize').value);
+
+  document.getElementById('totalInfo').textContent =
+    'Toplam ' + totalCount + ' soru';
+
+  if (!items.length) {
+    document.getElementById('questionsList').innerHTML =
+      '<div class="empty">Bu kriterlerde soru bulunamadı.</div>';
+    return;
+  }
+
+  questions = Array.from(items).map(function(q) {
+    return {
+      id: getXmlText(q, 'id'),
+      productId: getXmlText(q, 'productId'),
+      productTitle: getXmlText(q, 'productTitle'),
+      question: getXmlText(q, 'question'),
+      subject: getXmlText(q, 'questionSubject'),
+      answer: getXmlText(q, 'answer'),
+      status: getXmlText(q, 'status')
+    };
   });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-    ring.style.transform = 'scale(1)';
-    ring.style.opacity = '.6';
+
+  renderQuestions();
+
+  if (totalPages > 1) {
+    document.getElementById('paginationBar').style.display = 'flex';
+    document.getElementById('pageInfo').textContent =
+      'Sayfa ' + (currentPage + 1) + ' / ' + totalPages;
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').disabled = currentPage >= totalPages - 1;
+  }
+}
+
+function renderQuestions() {
+  var container = document.getElementById('questionsList');
+  var html = '';
+  questions.forEach(function(q, i) {
+    var answered = q.answer && q.answer.trim().length > 0;
+    html += '<div class="question-card" id="qcard-' + i + '">' +
+      '<div class="q-header">' +
+      '<span class="badge ' + (answered ? 'badge-answered' : 'badge-wait') + '" id="qbadge-' + i + '">' +
+      (answered ? '✓ Cevaplanmış' : '⏳ Bekliyor') + '</span>' +
+      '<span class="q-id">Soru #' + q.id + '</span>' +
+      (q.subject ? '<span class="q-date">Konu: ' + q.subject + '</span>' : '') +
+      '</div>' +
+      '<div class="q-product">📦 ' + (q.productTitle || 'Ürün #' + q.productId) + '</div>' +
+      '<div class="q-text">' + q.question + '</div>' +
+      (answered ? '<div class="q-existing">Mevcut cevap: ' + q.answer + '</div>' : '') +
+      '<div class="ans-row">' +
+      '<textarea id="ans-' + i + '" placeholder="Cevabınızı buraya yazın..."></textarea>' +
+      '<div class="ans-controls">' +
+      '<button class="btn btn-green" onclick="sendAnswer(' + i + ')">' + (answered ? 'Güncelle' : 'Cevapla') + '</button>' +
+      '<span class="ans-status msg" id="ans-status-' + i + '"></span>' +
+      '</div></div>' +
+      '</div>';
   });
-});
+  container.innerHTML = html;
+}
+
+async function sendAnswer(idx) {
+  var q = questions[idx];
+  var answerText = document.getElementById('ans-' + idx).value.trim();
+  if (!answerText) {
+    setStatus(idx, 'Cevap boş olamaz!', false);
+    return;
+  }
+  setStatus(idx, 'Gönderiliyor...', null);
+
+  try {
+    var resp = await fetch('https://api.n11.com/ws/ProductService/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/xml;charset=UTF-8',
+        'SOAPAction': ''
+      },
+      body: buildAnswerSoap(q.id, answerText)
+    });
+    var text = await resp.text();
+    var doc = new DOMParser().parseFromString(text, 'text/xml');
+    var statusEl = doc.querySelector('r > status') || doc.querySelector('result > status');
+
+    if (statusEl && statusEl.textContent === 'success') {
+      setStatus(idx, '✓ Cevap gönderildi!', true);
+      questions[idx].answer = answerText;
+      var badge = document.getElementById('qbadge-' + idx);
+      badge.className = 'badge badge-answered';
+      badge.textContent = '✓ Cevaplanmış';
+      var existingEl = document.querySelector('#qcard-' + idx + ' .q-existing');
+      if (existingEl) {
+        existingEl.textContent = 'Mevcut cevap: ' + answerText;
+      } else {
+        var qText = document.querySelector('#qcard-' + idx + ' .q-text');
+        var div = document.createElement('div');
+        div.className = 'q-existing';
+        div.textContent = 'Mevcut cevap: ' + answerText;
+        qText.insertAdjacentElement('afterend', div);
+      }
+    } else {
+      var errEl = doc.querySelector('errorMessage') || doc.querySelector('faultstring');
+      setStatus(idx, 'Hata: ' + (errEl ? errEl.textContent : 'Bilinmeyen'), false);
+    }
+  } catch(e) {
+    setStatus(idx, 'Bağlantı hatası: ' + e.message, false);
+  }
+}
+
+function setStatus(idx, msg, ok) {
+  var el = document.getElementById('ans-status-' + idx);
+  el.textContent = msg;
+  el.className = 'ans-status msg' + (ok === true ? ' ok' : ok === false ? ' err' : '');
+}
+
+function changePage(dir) {
+  var newPage = currentPage + dir;
+  if (newPage < 0 || newPage >= totalPages) return;
+  loadQuestions(newPage);
+  window.scrollTo(0, 0);
+}
 </script>
 </body>
 </html>
